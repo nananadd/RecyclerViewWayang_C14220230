@@ -8,10 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.RequestCreator
 
-class adapterRevView (private val listWayang: ArrayList<wayang>) : RecyclerView
-    .Adapter<adapterRevView.ListViewHolder>() {
+class adapterRecView (private val listWayang: ArrayList<wayang>) : RecyclerView
+    .Adapter<adapterRecView.ListViewHolder>() {
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var _namaWayang= itemView.findViewById<TextView>(R.id.namaWayang)
@@ -41,5 +40,20 @@ class adapterRevView (private val listWayang: ArrayList<wayang>) : RecyclerView
         Picasso.get()
             .load(wayang.foto)
             .into(holder._gambarWayang)
+
+        holder._gambarWayang.setOnClickListener {
+//            Toast.makeText(holder.itemView.context,wayang.nama,Toast.LENGTH_LONG).show()
+            onItemClickback.onItemClicked(listWayang[position])
+        }
+    }
+    private lateinit var onItemClickback : OnItemClickback
+
+    interface OnItemClickback {
+        fun onItemClicked(data: wayang)
+    }
+    fun setOnItemClickback(onItemClickback: OnItemClickback) {
+        this.onItemClickback = onItemClickback
     }
 }
+
+

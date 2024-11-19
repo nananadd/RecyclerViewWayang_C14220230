@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">RecyclerView</string>
-    
+
     <string-array name="namaWayang">
         <item>Bima</item>
         <item>Arjuna</item>

@@ -1,14 +1,12 @@
 package c14220230.paba.recyclerview
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,11 +47,21 @@ class MainActivity : AppCompatActivity() {
 
     fun TampilkanData() {
 //        _rvWayang.layoutManager = LinearLayoutManager(this)
-        _rvWayang.layoutManager = GridLayoutManager(this,2)
+//        _rvWayang.layoutManager = GridLayoutManager(this,2)
 //        _rvWayang.layoutManager = StaggeredGridLayoutManager(
 //            2,
 //            LinearLayoutManager.VERTICAL)
-        _rvWayang.adapter = adapterRevView(arWayang)
+        _rvWayang.adapter = adapterRecView(arWayang)
+
+        val adapterWayang = adapterRecView(arWayang)
+        _rvWayang.adapter = adapterWayang
+
+        adapterWayang.setOnItemClickback(object : adapterRecView.OnItemClickback {
+            override fun onItemClicked(data: wayang) {
+                Toast.makeText(this@MainActivity, data.nama, Toast.LENGTH_LONG)
+                    .show()
+            }
+        })
     }
 }
 
