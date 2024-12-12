@@ -44,30 +44,27 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         _rvWayang = findViewById<RecyclerView>(R.id.rvWayang)
-        SiapkanData()
-        TambahData()
-        TampilkanData()
-
-        sp = getSharedPreferences("dataSP", MODE_PRIVATE)
-
-        val gson = Gson()
-        val isiSP = sp.getString("spWayang", "null")
-        val type = object : TypeToken<ArrayList<wayang>>() {}.type
-        if (isiSP != "null") {
-            arWayang = gson.fromJson(isiSP, type)
-        }
-
+//        SiapkanData()
         if (arWayang.size == 0) {
             SiapkanData()
         } else {
             arWayang.forEach {
                 _nama.add(it.nama)
+                _gambar.add(it.foto)
                 _karakter.add(it.karakter)
                 _deskripsi.add(it.deskripsi)
-                _gambar.add(it.foto)
             }
             arWayang.clear()
         }
+        sp = getSharedPreferences("dataSP", MODE_PRIVATE)
+        TambahData()
+        TampilData()
+
+        val gson = Gson()
+        val isiSP = sp.getString("spWayang", null)
+        val type = object : TypeToken<ArrayList<wayang>>() {}.type
+        if (isiSP != null)
+            arWayang = gson.fromJson(isiSP, type)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -77,11 +74,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun SiapkanData() {
-//        _nama = resources.getStringArray(R.array.namaWayang)
-//        _deskripsi = resources.getStringArray(R.array.deskripsiWayang)
-//        _karakter = resources.getStringArray(R.array.karakterUtamaWayang)
-//        _gambar = resources.getStringArray(R.array.gambarWayang)
-
         _nama = resources.getStringArray(R.array.namaWayang).toMutableList()
         _deskripsi = resources.getStringArray(R.array.deskripsiWayang).toMutableList()
         _karakter = resources.getStringArray(R.array.karakterUtamaWayang).toMutableList()
@@ -101,55 +93,45 @@ class MainActivity : AppCompatActivity() {
             )
             arWayang.add(data)
         }
-
         val json = gson.toJson(arWayang)
         editor.putString("spWayang", json)
         editor.apply()
     }
 
-    fun TampilkanData() {
-//        _rvWayang.layoutManager = LinearLayoutManager(this)
-//        _rvWayang.layoutManager = GridLayoutManager(this,2)
-//        _rvWayang.layoutManager = StaggeredGridLayoutManager(
-//            2,
-//            LinearLayoutManager.VERTICAL)
-//        _rvWayang.adapter = adapterRecView(arWayang)
-
+    fun TampilData() {
         _rvWayang.layoutManager = LinearLayoutManager(this)
+//        _rvWayang.layoutManager = GridLayoutManager(this,2)
+//        _rvWayang.layoutManager = StaggeredGridLayoutManager(2,LinearLayoutManager.VERTICAL)
+        _rvWayang.adapter = adapterRecView(arWayang)
+
         val adapterWayang = adapterRecView(arWayang)
         _rvWayang.adapter = adapterWayang
 
-        adapterWayang.setOnItemClickback(object : adapterRecView.OnItemClickback {
+        adapterWayang.setOnItemClickCallback(object : adapterRecView.OnItemClickCallback {
             override fun onItemClicked(data: wayang) {
-                Toast.makeText(this@MainActivity, data.nama, Toast.LENGTH_LONG)
-                    .show()
-                val intent = Intent(
-                    this@MainActivity, detWayang::class
-                        .java
-                )
+                Toast.makeText(this@MainActivity, data.nama, Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this@MainActivity, detWayang::class.java)
                 intent.putExtra("kirimData", data)
                 startActivity(intent)
-
             }
 
-            override fun delData(Pos: Int) {
+            override fun delData(pos: Int) {
                 AlertDialog.Builder(this@MainActivity)
                     .setTitle("HAPUS DATA")
-                    .setMessage("Apakah Benar Data " + _nama[Pos] + " Akan Dihapus?")
+                    .setMessage("Apakah benar data" + _nama[pos] + "akan dihapus?")
                     .setPositiveButton(
-                        "HAPUS",
-                        DialogInterface.OnClickListener { dialog, which ->
-                            _nama.removeAt(Pos)
-                            _karakter.removeAt(Pos)
-                            _deskripsi.removeAt(Pos)
-                            _gambar.removeAt(Pos)
+                        "HAPUS", { dialog, which ->
+                            _gambar.removeAt(pos)
+                            _nama.removeAt(pos)
+                            _deskripsi.removeAt(pos)
+                            _karakter.removeAt(pos)
                             TambahData()
-                            TampilkanData()
+                            TampilData()
                         }
                     )
                     .setNegativeButton(
-                        "BATAL",
-                        DialogInterface.OnClickListener { dialog, which ->
+                        "BATAL", { dialog, which ->
                             Toast.makeText(
                                 this@MainActivity,
                                 "Data Batal Dihapus",

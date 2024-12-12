@@ -11,14 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
 class adapterRecView (private val listWayang: ArrayList<wayang>) : RecyclerView
-    .Adapter<adapterRecView.ListViewHolder>() {
+.Adapter<adapterRecView.ListViewHolder>() {
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var _namaWayang= itemView.findViewById<TextView>(R.id.namaWayang)
         var _karakterWayang= itemView.findViewById<TextView>(R.id.karakterWayang)
         var _deskripsiWayang= itemView.findViewById<TextView>(R.id.deskripsiWayang)
         var _gambarWayang= itemView.findViewById<ImageView>(R.id.gambarWayang)
-        var _btnHapus= itemView.findViewById<Button>(R.id.btnHapus)
+        var _btnHapusData= itemView.findViewById<Button>(R.id.btnHapus)
 
     }
 
@@ -38,32 +38,26 @@ class adapterRecView (private val listWayang: ArrayList<wayang>) : RecyclerView
         holder._namaWayang.setText(wayang.nama)
         holder._deskripsiWayang.setText(wayang.deskripsi)
         holder._karakterWayang.setText(wayang.karakter)
-        Log.d("TEST", wayang.foto)
+        Log.d("TEST",wayang.foto)
         Picasso.get()
             .load(wayang.foto)
             .into(holder._gambarWayang)
 
         holder._gambarWayang.setOnClickListener {
-//            Toast.makeText(holder.itemView.context,wayang.nama,Toast.LENGTH_LONG).show()
-            onItemClickback.onItemClicked(listWayang[position])
+//            Toast.makeText(holder.itemView.context,wayang.nama,Toast.LENGTH_SHORT).show()
+            onItemClickCallback.onItemClicked(listWayang[position])
         }
-        holder._btnHapus.setOnClickListener {
+        holder._btnHapusData.setOnClickListener {
             onItemClickCallback.delData(position)
         }
     }
-    private lateinit var onItemClickback : OnItemClickback
-    private lateinit var onItemClickCallback: OnItemClickCallback
-
-    interface OnItemClickback {
-        fun onItemClicked(data: wayang)
-        fun delData(Pos: Int)
-    }
-    fun setOnItemClickback(onItemClickback: OnItemClickback) {
-        this.onItemClickback = onItemClickback
-    }
+    private lateinit var onItemClickCallback : OnItemClickCallback
     interface OnItemClickCallback {
         fun onItemClicked(data: wayang)
-        fun delData(Pos: Int)
+        fun delData(pos: Int)
+    }
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
     }
 }
 

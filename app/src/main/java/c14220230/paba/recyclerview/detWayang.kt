@@ -24,10 +24,7 @@ class detWayang : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val dataIntent = intent.getParcelableExtra<wayang>(
-            "kirimData",
-            wayang::class.java
-        )
+        val dataIntent = intent.getParcelableExtra<wayang>("kirimData", wayang::class.java)
         if (dataIntent != null) {
             Picasso.get()
                 .load(dataIntent.foto)
